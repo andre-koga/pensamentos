@@ -1,4 +1,4 @@
-# ![Pensamentos](.github/git-banner.png)
+# ![Pensamentos](.github/pensamentos.png)
 
 # Pensamentos - My Newest Blog
 
