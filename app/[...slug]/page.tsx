@@ -3,11 +3,6 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { AppSidebar } from '@/components/app-sidebar';
-import { AppBreadcrumbs } from '@/components/app-breadcrumbs';
-import { Separator } from '@/components/ui/separator';
-import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
 
 interface PoemPageProps {
   params: { slug: string[] };
@@ -142,39 +137,19 @@ export default async function PoemPage({ params }: PoemPageProps) {
   }
 
   const { content: mdxContent, created, modified } = content;
-  const contentTree = getContentTree();
-  const recentlyModified = getRecentlyModified();
 
   return (
-    <>
-      <AppSidebar
-        contentTree={contentTree}
-        recentlyModified={recentlyModified}
-      />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <AppBreadcrumbs />
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <article className="prose prose-neutral dark:prose-invert max-w-none">
-            {/* Poem dates */}
-            <div className="text-muted-foreground mb-4 text-sm">
-              Created: {formatDate(created)}
-              {created.getTime() !== modified.getTime() && (
-                <> • Last modified: {formatDate(modified)}</>
-              )}
-            </div>
+    <article className="prose prose-neutral dark:prose-invert mx-auto">
+      {/* Poem dates */}
+      <div className="text-muted-foreground mb-4 text-sm">
+        Created: {formatDate(created)}
+        {created.getTime() !== modified.getTime() && (
+          <> • Last modified: {formatDate(modified)}</>
+        )}
+      </div>
 
-            {/* Render MDX content */}
-            <MDXRemote source={mdxContent} />
-          </article>
-        </div>
-      </SidebarInset>
-    </>
+      {/* Render MDX content */}
+      <MDXRemote source={mdxContent} />
+    </article>
   );
 }

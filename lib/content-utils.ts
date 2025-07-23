@@ -113,12 +113,12 @@ export function getAllContentItems(): ContentItem[] {
   return items;
 }
 
-// Function to get recently modified poems (last 5)
+// Function to get recently modified poems (last 3)
 export function getRecentlyModified(): ContentItem[] {
   const allItems = getAllContentItems();
   return allItems
     .sort((a, b) => b.modified.getTime() - a.modified.getTime())
-    .slice(0, 5);
+    .slice(0, 3);
 }
 
 // Utility function to get all poem paths
