@@ -4,6 +4,7 @@ import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 export const metadata: Metadata = {
   title: 'Pensamentos',
@@ -16,7 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(GeistSans.className, GeistMono.className)}>
+    <html
+      lang="en"
+      className={cn(GeistSans.className, GeistMono.className)}
+      suppressHydrationWarning
+    >
       <head />
       <body className="font-sans">
         <ThemeProvider
@@ -25,7 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

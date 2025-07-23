@@ -16,7 +16,7 @@ export default function NotFound() {
   const contentTree = getContentTree();
   const recentlyModified = getRecentlyModified();
   return (
-    <SidebarProvider>
+    <>
       <AppSidebar
         contentTree={contentTree}
         recentlyModified={recentlyModified}
@@ -29,49 +29,21 @@ export default function NotFound() {
             className="mr-2 data-[orientation=vertical]:h-4"
           />
           <AppBreadcrumbs />
+          <Link
+            href="/"
+            className="text-muted-foreground hover:text-foreground ml-auto flex items-center gap-2 text-sm font-medium transition-colors"
+          >
+            <Home className="h-4 w-4" />
+            Back to Home
+          </Link>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="flex flex-1 items-center justify-center">
-            <div className="mx-auto max-w-md space-y-6 text-center">
-              {/* 404 Display */}
-              <div className="space-y-2">
-                <h1 className="text-muted-foreground/20 text-8xl font-bold">
-                  404
-                </h1>
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  Page Not Found
-                </h2>
-                <p className="text-muted-foreground">
-                  The page you're looking for doesn't exist or has been moved.
-                </p>
-              </div>
-
-              {/* Navigation Options */}
-              <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <Button asChild size="lg">
-                  <Link href="/">
-                    <Home className="mr-2 h-4 w-4" />
-                    Go Home
-                  </Link>
-                </Button>
-
-                <RandomPoemButton />
-              </div>
-
-              {/* Additional Help */}
-              <div className="space-y-2 border-t pt-4 text-center">
-                <p className="text-muted-foreground text-sm">
-                  Lost? Try checking the navigation menu or returning to the
-                  homepage.
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  If you believe this is an error... well, I can't help you.
-                </p>
-              </div>
-            </div>
+          <div className="prose dark:prose-invert max-w-none">
+            <h1>404 - Not Found</h1>
+            <p>The page you are looking for does not exist.</p>
           </div>
         </div>
       </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

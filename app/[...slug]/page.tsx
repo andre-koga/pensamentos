@@ -149,7 +149,7 @@ export default async function PoemPage({ params }: PoemPageProps) {
   const recentlyModified = getRecentlyModified();
 
   return (
-    <SidebarProvider>
+    <>
       <AppSidebar
         contentTree={contentTree}
         recentlyModified={recentlyModified}
@@ -178,6 +178,6 @@ export default async function PoemPage({ params }: PoemPageProps) {
           </article>
         </div>
       </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

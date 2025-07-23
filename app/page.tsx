@@ -13,7 +13,7 @@ export default function Home() {
   const recentlyModified = getRecentlyModified();
 
   return (
-    <SidebarProvider>
+    <>
       <AppSidebar
         contentTree={contentTree}
         recentlyModified={recentlyModified}
@@ -36,6 +36,6 @@ export default function Home() {
           </div>
         </div>
       </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

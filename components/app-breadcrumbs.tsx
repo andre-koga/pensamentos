@@ -89,9 +89,7 @@ export function AppBreadcrumbs() {
               {segment.isLast ? (
                 <BreadcrumbPage>{segment.label}</BreadcrumbPage>
               ) : (
-                <BreadcrumbLink href={segment.href}>
-                  {segment.label}
-                </BreadcrumbLink>
+                <BreadcrumbLink>{segment.label}</BreadcrumbLink>
               )}
             </BreadcrumbItem>
             {!segment.isLast && (
