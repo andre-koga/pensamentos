@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronRight, File, Folder } from 'lucide-react';
+import { ChevronRight, Command, File, Folder } from 'lucide-react';
 
 import {
   Collapsible,
@@ -12,6 +12,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -19,6 +20,7 @@ import {
   SidebarMenuSub,
   SidebarRail,
 } from '@/components/ui/sidebar';
+import Image from 'next/image';
 
 // This is sample data.
 const data = {
@@ -55,6 +57,9 @@ const data = {
     ],
     ['lib', ['util.ts']],
     ['public', 'favicon.ico', 'vercel.svg'],
+    ['public', 'favicon.ico', 'vercel.svg'],
+    ['public', 'favicon.ico', 'vercel.svg'],
+    ['public', 'favicon.ico', 'vercel.svg'],
     '.eslintrc.json',
     '.gitignore',
     'next.config.js',
@@ -67,9 +72,35 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <a href="#">
+                <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg">
+                  <Image
+                    src="/logo.png"
+                    alt="The Thought Compiler"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">
+                    The Thought Compiler
+                  </span>
+                  <span className="truncate text-xs opacity-70">
+                    by Andre H. Koga
+                  </span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Changes</SidebarGroupLabel>
+          <SidebarGroupLabel>Recently Modified</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {data.changes.map((item, index) => (
