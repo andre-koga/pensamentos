@@ -10,11 +10,17 @@ import {
 } from '@/components/ui/sidebar';
 import { Home } from 'lucide-react';
 import Link from 'next/link';
+import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
 
 export default function NotFound() {
+  const contentTree = getContentTree();
+  const recentlyModified = getRecentlyModified();
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar
+        contentTree={contentTree}
+        recentlyModified={recentlyModified}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />

@@ -11,9 +11,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
 
 interface PoemPageProps {
-  params: Promise<{ slug: string[] }>;
+  params: { slug: string[] };
 }
 
 interface ContentFile {
@@ -109,7 +110,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PoemPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const content = getContentByPath(slug);
 
   if (!content) {
@@ -136,7 +137,7 @@ export async function generateMetadata({ params }: PoemPageProps) {
 }
 
 export default async function PoemPage({ params }: PoemPageProps) {
-  const { slug } = await params;
+  const { slug } = params;
   const content = getContentByPath(slug);
 
   if (!content) {
@@ -144,10 +145,15 @@ export default async function PoemPage({ params }: PoemPageProps) {
   }
 
   const { frontmatter, content: mdxContent, created, modified } = content;
+  const contentTree = getContentTree();
+  const recentlyModified = getRecentlyModified();
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar
+        contentTree={contentTree}
+        recentlyModified={recentlyModified}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />

@@ -1,5 +1,8 @@
+'use client';
+
 import * as React from 'react';
-import { ChevronRight, Command, File, Folder } from 'lucide-react';
+import { ChevronRight, File, Folder, Clock } from 'lucide-react';
+import Link from 'next/link';
 
 import {
   Collapsible,
@@ -14,69 +17,37 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarRail,
 } from '@/components/ui/sidebar';
 import Image from 'next/image';
+import { ContentItem } from '@/lib/content-utils';
 
-// This is sample data.
-const data = {
-  changes: [
-    {
-      file: 'README.md',
-      state: 'M',
-    },
-    {
-      file: 'api/hello/route.ts',
-      state: 'U',
-    },
-    {
-      file: 'app/layout.tsx',
-      state: 'M',
-    },
-  ],
-  tree: [
-    [
-      'app',
-      [
-        'api',
-        ['hello', ['route.ts']],
-        'page.tsx',
-        'layout.tsx',
-        ['blog', ['page.tsx']],
-      ],
-    ],
-    [
-      'components',
-      ['ui', 'buttons.tsx', 'card.tsx'],
-      'header.tsx',
-      'footer.tsx',
-    ],
-    ['lib', ['util.ts']],
-    ['public', 'favicon.ico', 'vercel.svg'],
-    ['public', 'favicon.ico', 'vercel.svg'],
-    ['public', 'favicon.ico', 'vercel.svg'],
-    ['public', 'favicon.ico', 'vercel.svg'],
-    '.eslintrc.json',
-    '.gitignore',
-    'next.config.js',
-    'tailwind.config.js',
-    'package.json',
-    'README.md',
-  ],
-};
+// Track current path for building URLs in nested structures
+interface TreeProps {
+  item: string | any[];
+  basePath?: string[];
+}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  contentTree: any[];
+  recentlyModified: ContentItem[];
+}
+
+export function AppSidebar({
+  contentTree,
+  recentlyModified,
+  ...props
+}: AppSidebarProps) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/">
                 <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg">
                   <Image
                     src="/logo.png"
@@ -86,14 +57,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    The Thought Compiler
-                  </span>
+                  <span className="truncate font-medium">Pensamentos</span>
                   <span className="truncate text-xs opacity-70">
                     by Andre H. Koga
                   </span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -103,24 +72,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Recently Modified</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {data.changes.map((item, index) => (
+              {recentlyModified.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton>
-                    <File />
-                    {item.file}
+                  <SidebarMenuButton asChild>
+                    <Link href={`/${item.path.join('/')}`}>
+                      <Clock className="h-4 w-4" />
+                      <span className="truncate">{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
-                  <SidebarMenuBadge>{item.state}</SidebarMenuBadge>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Files</SidebarGroupLabel>
+          <SidebarGroupLabel>All Poems</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {data.tree.map((item, index) => (
-                <Tree key={index} item={item} />
+              {contentTree.map((item, index) => (
+                <Tree key={index} item={item} basePath={[]} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -131,38 +101,40 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   );
 }
 
-function Tree({ item }: { item: string | any[] }) {
+function Tree({ item, basePath = [] }: TreeProps) {
   const [name, ...items] = Array.isArray(item) ? item : [item];
 
   if (!items.length) {
+    // This is a file - create link to poem
+    const poemPath = [...basePath, name].join('/');
+
     return (
-      <SidebarMenuButton
-        isActive={name === 'button.tsx'}
-        className="data-[active=true]:bg-transparent"
-      >
-        <File />
-        {name}
+      <SidebarMenuButton asChild>
+        <Link href={`/${poemPath}`}>
+          <File className="h-4 w-4" />
+          <span className="truncate">{name}</span>
+        </Link>
       </SidebarMenuButton>
     );
   }
 
+  // This is a folder - create collapsible section
+  const currentPath = [...basePath, name];
+
   return (
     <SidebarMenuItem>
-      <Collapsible
-        className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        defaultOpen={name === 'components' || name === 'ui'}
-      >
+      <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
             <ChevronRight className="transition-transform" />
-            <Folder />
-            {name}
+            <Folder className="h-4 w-4" />
+            <span className="truncate">{name}</span>
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
             {items.map((subItem, index) => (
-              <Tree key={index} item={subItem} />
+              <Tree key={index} item={subItem} basePath={currentPath} />
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
