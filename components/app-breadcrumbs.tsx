@@ -27,7 +27,7 @@ function formatLabel(segment: string): string {
 }
 
 // Function to get user-friendly labels for common paths
-function getCustomLabel(segment: string, fullPath: string): string {
+function getCustomLabel(segment: string): string {
   const customLabels: Record<string, string> = {
     ui: 'UI Components',
     components: 'Components',
@@ -68,7 +68,7 @@ export function AppBreadcrumbs() {
     segments.forEach((segment, index) => {
       const href = '/' + segments.slice(0, index + 1).join('/');
       const isLast = index === segments.length - 1;
-      const label = getCustomLabel(segment, pathname);
+      const label = getCustomLabel(segment);
 
       breadcrumbs.push({
         label,

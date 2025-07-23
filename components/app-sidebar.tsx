@@ -23,16 +23,16 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import Image from 'next/image';
-import { ContentItem } from '@/lib/content-utils';
+import { ContentItem, ContentTreeItem } from '@/lib/content-utils';
 
 // Track current path for building URLs in nested structures
 interface TreeProps {
-  item: string | any[];
+  item: string | ContentTreeItem[];
   basePath?: string[];
 }
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  contentTree: any[];
+  contentTree: ContentTreeItem[];
   recentlyModified: ContentItem[];
 }
 

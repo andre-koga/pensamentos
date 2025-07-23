@@ -14,7 +14,8 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-muted-foreground">
-            The page you're looking for doesn't exist or has been moved.
+            The page you&apos;re looking for doesn&apos;t exist or has been
+            moved.
           </p>
         </div>
 
@@ -41,7 +42,7 @@ export default function NotFound() {
             Lost? Try checking the navigation menu or returning to the homepage.
           </p>
           <p className="text-muted-foreground text-xs">
-            If you believe this is an error... well, I can't help you.
+            If you believe this is an error... well, I can&apos;t help you.
           </p>
         </div>
       </div>

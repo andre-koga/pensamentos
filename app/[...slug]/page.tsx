@@ -139,7 +139,7 @@ export default async function PoemPage({ params }: PoemPageProps) {
   const { content: mdxContent, created, modified } = content;
 
   return (
-    <article className="prose prose-neutral dark:prose-invert mx-auto">
+    <article className="prose prose-neutral dark:prose-invert mx-auto max-w-[55ch]">
       {/* Poem dates */}
       <div className="text-muted-foreground mb-4 text-sm">
         Created: {formatDate(created)}

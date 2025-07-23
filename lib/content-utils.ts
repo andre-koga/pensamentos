@@ -10,11 +10,17 @@ export interface ContentItem {
   description?: string;
 }
 
+// Type for the tree structure: either a string (file) or array starting with string (directory)
+export type ContentTreeItem = string | [string, ...ContentTreeItem[]];
+
 // Function to recursively scan content directory and build tree structure for sidebar
-export function getContentTree(): any[] {
+export function getContentTree(): ContentTreeItem[] {
   const contentDir = join(process.cwd(), 'content');
 
-  function scanDirectory(dir: string, relativePath: string[] = []): any[] {
+  function scanDirectory(
+    dir: string,
+    relativePath: string[] = []
+  ): ContentTreeItem[] {
     try {
       const items = readdirSync(dir);
       const directories: string[] = [];
@@ -34,7 +40,7 @@ export function getContentTree(): any[] {
       directories.sort();
       files.sort();
 
-      const result: any[] = [];
+      const result: ContentTreeItem[] = [];
 
       for (const directory of directories) {
         const fullPath = join(dir, directory);
