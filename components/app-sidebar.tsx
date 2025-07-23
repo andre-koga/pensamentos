@@ -1,8 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronRight, File, Folder, Clock } from 'lucide-react';
+import {
+  ChevronRight,
+  File,
+  Folder,
+  Clock,
+  Home,
+  Shuffle,
+  SortAsc,
+  ListCollapse,
+} from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import {
   Collapsible,
@@ -24,6 +34,7 @@ import {
 } from '@/components/ui/sidebar';
 import Image from 'next/image';
 import { ContentItem, ContentTreeItem } from '@/lib/content-utils';
+import { Button } from '@/components/ui/button';
 
 // Track current path for building URLs in nested structures
 interface TreeProps {
@@ -41,6 +52,20 @@ export function AppSidebar({
   recentlyModified,
   ...props
 }: AppSidebarProps) {
+  const router = useRouter();
+
+  const handleShuffleClick = async () => {
+    try {
+      const response = await fetch('/api/random-poem');
+      if (response.ok) {
+        const data = await response.json();
+        router.push(data.path);
+      }
+    } catch (error) {
+      console.error('Error fetching random poem:', error);
+    }
+  };
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -68,6 +93,32 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="flex flex-row items-center justify-center gap-1.5">
+              <Button asChild size="icon" variant="ghost">
+                <Link href="/">
+                  <Home />
+                </Link>
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleShuffleClick}
+                className="cursor-pointer"
+              >
+                <Shuffle />
+              </Button>
+              <Button size="icon" variant="ghost">
+                <SortAsc />
+              </Button>
+              <Button size="icon" variant="ghost">
+                <ListCollapse />
+              </Button>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup></SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
           <SidebarGroupContent>
