@@ -10,6 +10,7 @@ import {
   Shuffle,
   SortAsc,
   ListCollapse,
+  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -93,9 +94,9 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup className="py-0">
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-row items-center justify-center gap-1.5">
+            <SidebarMenu className="flex flex-row items-center justify-center gap-1">
               <Button asChild size="icon" variant="ghost">
                 <Link href="/">
                   <Home />
@@ -115,11 +116,13 @@ export function AppSidebar({
               <Button size="icon" variant="ghost">
                 <ListCollapse />
               </Button>
+              <Button size="icon" variant="ghost">
+                <ChevronDown />
+              </Button>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup></SidebarGroup>
-        <SidebarGroup>
+        <SidebarGroup className="pt-0">
           <SidebarGroupLabel>Recent</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
