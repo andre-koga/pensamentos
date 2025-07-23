@@ -6,11 +6,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppBreadcrumbs } from '@/components/app-breadcrumbs';
 import { Separator } from '@/components/ui/separator';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
 
 interface PoemPageProps {
@@ -19,6 +15,7 @@ interface PoemPageProps {
 
 interface ContentFile {
   path: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   frontmatter: any;
   content: string;
   filePath: string;
@@ -144,7 +141,7 @@ export default async function PoemPage({ params }: PoemPageProps) {
     notFound();
   }
 
-  const { frontmatter, content: mdxContent, created, modified } = content;
+  const { content: mdxContent, created, modified } = content;
   const contentTree = getContentTree();
   const recentlyModified = getRecentlyModified();
 

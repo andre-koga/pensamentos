@@ -120,3 +120,39 @@ export function getRecentlyModified(): ContentItem[] {
     .sort((a, b) => b.modified.getTime() - a.modified.getTime())
     .slice(0, 5);
 }
+
+// Utility function to get all poem paths
+export function getAllPoemPaths(): string[] {
+  const contentDir = join(process.cwd(), 'content');
+  const paths: string[] = [];
+
+  function scanDirectory(dir: string, relativePath: string[] = []) {
+    try {
+      const items = readdirSync(dir);
+      for (const item of items) {
+        const fullPath = join(dir, item);
+        const stat = statSync(fullPath);
+        if (stat.isDirectory()) {
+          scanDirectory(fullPath, [...relativePath, item]);
+        } else if (item.endsWith('.mdx')) {
+          const fileName = item.replace('.mdx', '');
+          const urlPath = [...relativePath, fileName];
+          const pathString = urlPath.length > 0 ? `/${urlPath.join('/')}` : '/';
+          paths.push(pathString);
+        }
+      }
+    } catch (error) {
+      console.error('Error reading content directory:', dir, error);
+    }
+  }
+  scanDirectory(contentDir);
+  return paths;
+}
+
+// Utility function to get a random poem path
+export function getRandomPoemPath(): string | null {
+  const poemPaths = getAllPoemPaths();
+  if (poemPaths.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * poemPaths.length);
+  return poemPaths[randomIndex];
+}
