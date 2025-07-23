@@ -16,13 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={cn(GeistSans.className, GeistMono.className)}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={cn(GeistSans.className, GeistMono.className)}>
       <head />
-      <body>
+      <body className="font-sans">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

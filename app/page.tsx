@@ -6,7 +6,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home({ children }: { children: React.ReactNode }) {
   return (

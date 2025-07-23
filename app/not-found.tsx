@@ -59,7 +59,7 @@ export default function NotFound() {
                   homepage.
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  If you believe this is an error, please contact support.
+                  If you believe this is an error... well, I can't help you.
                 </p>
               </div>
             </div>
