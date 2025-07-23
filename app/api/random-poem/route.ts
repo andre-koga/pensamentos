@@ -1,43 +1,49 @@
 import { NextResponse } from 'next/server';
-import { readdirSync, statSync, readFileSync } from 'fs';
+import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
-import matter from 'gray-matter';
 
-// Function to find all .mdx files in content directory and extract their slugs from frontmatter
+// Function to find all .mdx files in content directory and map them to URL paths
 function findContentPaths(contentDir: string): string[] {
   const paths: string[] = [];
 
-  try {
-    const items = readdirSync(contentDir);
+  function scanDirectory(dir: string, relativePath: string[] = []) {
+    try {
+      const items = readdirSync(dir);
 
-    for (const item of items) {
-      const fullPath = join(contentDir, item);
-      const stat = statSync(fullPath);
+      for (const item of items) {
+        const fullPath = join(dir, item);
+        const stat = statSync(fullPath);
 
-      if (stat.isDirectory()) {
-        // Recursively scan subdirectories
-        paths.push(...findContentPaths(fullPath));
-      } else if (item.endsWith('.mdx')) {
-        try {
-          // Read the file and parse frontmatter
-          const fileContent = readFileSync(fullPath, 'utf8');
-          const { data } = matter(fileContent);
+        if (stat.isDirectory()) {
+          // Recursively scan subdirectories
+          scanDirectory(fullPath, [...relativePath, item]);
+        } else if (item.endsWith('.mdx')) {
+          try {
+            // Create URL path from file structure
+            const fileName = item.replace('.mdx', '');
+            const urlPath = [...relativePath, fileName];
 
-          // Use the slug from frontmatter, fallback to filename without extension
-          const slug = data.slug || item.replace('.mdx', '');
-          paths.push(`/${slug}`);
-        } catch (error) {
-          console.error('Error parsing frontmatter for file:', fullPath, error);
-          // Fallback to filename-based path if frontmatter parsing fails
-          const slug = item.replace('.mdx', '');
-          paths.push(`/${slug}`);
+            // Convert to URL string
+            const pathString =
+              urlPath.length > 0 ? `/${urlPath.join('/')}` : '/';
+            paths.push(pathString);
+          } catch (error) {
+            console.error('Error processing file:', fullPath, error);
+            // Fallback: use file path structure anyway
+            const fileName = item.replace('.mdx', '');
+            const urlPath = [...relativePath, fileName];
+            const pathString =
+              urlPath.length > 0 ? `/${urlPath.join('/')}` : '/';
+            paths.push(pathString);
+          }
         }
       }
+    } catch (error) {
+      console.error('Error reading content directory:', dir, error);
     }
-  } catch (error) {
-    console.error('Error reading content directory:', contentDir, error);
   }
 
+  scanDirectory(contentDir);
   return paths;
 }
 
@@ -46,7 +52,7 @@ export async function GET() {
     // Get the content directory path
     const contentDir = join(process.cwd(), 'content');
 
-    // Find all MDX files and their slugs
+    // Find all MDX files and their URL paths
     const poemPaths = findContentPaths(contentDir);
 
     if (poemPaths.length === 0) {
