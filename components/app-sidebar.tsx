@@ -27,7 +27,7 @@ import { ContentItem, ContentTreeItem } from '@/lib/content-utils';
 
 // Track current path for building URLs in nested structures
 interface TreeProps {
-  item: string | ContentTreeItem[];
+  item: ContentTreeItem;
   basePath?: string[];
 }
 
