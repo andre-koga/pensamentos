@@ -13,19 +13,21 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { AppBreadcrumbs } from '@/components/app-breadcrumbs';
 import { Separator } from '@/components/ui/separator';
 import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
+import { getSortPreferenceFromCookies } from '@/lib/cookie-utils';
 
 export const metadata: Metadata = {
   title: 'Pensamentos',
   description: 'A MD-based poetry archive',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const contentTree = getContentTree();
-  const recentlyModified = getRecentlyModified();
+  const sortPreference = await getSortPreferenceFromCookies();
+  const contentTree = getContentTree(sortPreference);
+  const recentlyModified = getRecentlyModified(sortPreference);
 
   return (
     <html

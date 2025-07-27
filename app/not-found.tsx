@@ -23,14 +23,14 @@ export default function NotFound() {
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <Button asChild size="lg">
             <Link href="/">
-              <Home className="mr-2 h-4 w-4" />
+              <Home />
               Go Home
             </Link>
           </Button>
 
           <Button asChild size="lg" className="cursor-pointer">
             <Link href={getRandomPoemPath() || ''}>
-              <Shuffle className="mr-2 h-4 w-4" />
+              <Shuffle />
               Random Poem
             </Link>
           </Button>

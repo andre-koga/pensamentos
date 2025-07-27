@@ -8,9 +8,7 @@ import {
   Clock,
   Home,
   Shuffle,
-  SortAsc,
   ListCollapse,
-  ChevronDown,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -36,6 +34,13 @@ import {
 import Image from 'next/image';
 import { ContentItem, ContentTreeItem } from '@/lib/content-utils';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { ModeToggle } from './mode-toggle';
+import { SortToggle } from './sort-toggle';
 
 // Track current path for building URLs in nested structures
 interface TreeProps {
@@ -94,31 +99,46 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup className="py-0">
+        <SidebarGroup className="py-0.5">
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-row items-center justify-center gap-1">
-              <Button asChild size="icon" variant="ghost">
-                <Link href="/">
-                  <Home />
-                </Link>
-              </Button>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={handleShuffleClick}
-                className="cursor-pointer"
-              >
-                <Shuffle />
-              </Button>
-              <Button size="icon" variant="ghost">
-                <SortAsc />
-              </Button>
-              <Button size="icon" variant="ghost">
-                <ListCollapse />
-              </Button>
-              <Button size="icon" variant="ghost">
-                <ChevronDown />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button asChild size="icon" variant="ghost">
+                    <Link href="/">
+                      <Home />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Home</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleShuffleClick}
+                    className="cursor-pointer"
+                  >
+                    <Shuffle />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Random Post</TooltipContent>
+              </Tooltip>
+              <SortToggle />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="cursor-pointer"
+                  >
+                    <ListCollapse />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>List</TooltipContent>
+              </Tooltip>
+              <ModeToggle />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -130,7 +150,7 @@ export function AppSidebar({
                 <SidebarMenuItem key={index}>
                   <SidebarMenuButton asChild>
                     <Link href={`/${item.path.join('/')}`}>
-                      <Clock className="h-4 w-4" />
+                      <Clock />
                       <span className="truncate">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -165,7 +185,7 @@ function Tree({ item, basePath = [] }: TreeProps) {
     return (
       <SidebarMenuButton asChild>
         <Link href={`/${poemPath}`}>
-          <File className="h-4 w-4" />
+          <File />
           <span className="truncate">{name}</span>
         </Link>
       </SidebarMenuButton>
@@ -181,7 +201,7 @@ function Tree({ item, basePath = [] }: TreeProps) {
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
             <ChevronRight className="transition-transform" />
-            <Folder className="h-4 w-4" />
+            <Folder />
             <span className="truncate">{name}</span>
           </SidebarMenuButton>
         </CollapsibleTrigger>
