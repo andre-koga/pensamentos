@@ -41,6 +41,7 @@ import {
 } from '@/components/ui/tooltip';
 import { ModeToggle } from './mode-toggle';
 import { SortToggle } from './sort-toggle';
+import { formatTimeAgo } from '@/lib/utils';
 
 // Track current path for building URLs in nested structures
 interface TreeProps {
@@ -148,10 +149,16 @@ export function AppSidebar({
             <SidebarMenu>
               {recentlyModified.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild className="h-10">
                     <Link href={`/${item.path.join('/')}`}>
-                      <Clock />
-                      <span className="truncate">{item.title}</span>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate">
+                          {item.path[item.path.length - 1]}
+                        </span>
+                        <span className="truncate text-xs opacity-60">
+                          {formatTimeAgo(item.modified)}
+                        </span>
+                      </div>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

@@ -17,7 +17,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 
 export type SortOption =
   | 'filename-asc'
@@ -106,51 +105,38 @@ export function SortToggle() {
           <DropdownMenuItem onClick={() => handleSortChange('filename-asc')}>
             <FileText />
             Name (A to Z)
-            {sortPreference === 'filename-asc' && (
-              <Check className="text-foreground" />
-            )}
+            {sortPreference === 'filename-asc' && <Check className="ml-auto" />}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleSortChange('filename-desc')}>
-            <FileText
-              className={cn(
-                sortPreference === 'filename-desc' && 'text-orange-700'
-              )}
-            />
+            <FileText />
             Name (Z to A)
+            {sortPreference === 'filename-desc' && (
+              <Check className="ml-auto" />
+            )}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleSortChange('modified-desc')}>
-            <Clock
-              className={cn(
-                sortPreference === 'modified-desc' && 'text-orange-700'
-              )}
-            />
+            <Clock />
             Modified (New to Old)
+            {sortPreference === 'modified-desc' && (
+              <Check className="ml-auto" />
+            )}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleSortChange('modified-asc')}>
-            <Clock
-              className={cn(
-                sortPreference === 'modified-asc' && 'text-orange-700'
-              )}
-            />
+            <Clock />
             Modified (Old to New)
+            {sortPreference === 'modified-asc' && <Check className="ml-auto" />}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleSortChange('created-desc')}>
-            <Clock
-              className={cn(
-                sortPreference === 'created-desc' && 'text-orange-700'
-              )}
-            />
+            <Clock />
             Created (New to Old)
+            {sortPreference === 'created-desc' && <Check className="ml-auto" />}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleSortChange('created-asc')}>
-            <Clock
-              className={cn(
-                sortPreference === 'created-asc' && 'text-orange-700'
-              )}
-            />
+            <Clock />
             Created (Old to New)
+            {sortPreference === 'created-asc' && <Check className="ml-auto" />}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
