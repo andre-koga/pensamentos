@@ -66,6 +66,7 @@ export function getContentTree(sortOption?: SortOption): ContentTreeItem[] {
             };
           } catch (error) {
             // Fallback to file system dates
+            console.error('Error parsing file:', file.fullPath, error);
             return {
               ...file,
               created: file.stat.birthtime,

@@ -5,7 +5,6 @@ import {
   ChevronRight,
   File,
   Folder,
-  Clock,
   Home,
   Shuffle,
   ListCollapse,
