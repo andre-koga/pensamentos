@@ -5,7 +5,7 @@ import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 interface PoemPageProps {
-  params: { slug: string[] };
+  params: Promise<{ slug: string[] }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
@@ -103,7 +103,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PoemPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const content = getContentByPath(slug);
 
   if (!content) {
@@ -130,7 +130,7 @@ export async function generateMetadata({ params }: PoemPageProps) {
 }
 
 export default async function PoemPage({ params }: PoemPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const content = getContentByPath(slug);
 
   if (!content) {
