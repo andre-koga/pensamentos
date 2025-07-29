@@ -6,7 +6,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 
 interface PoemPageProps {
   params: Promise<{ slug: string[] }>;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 interface ContentFile {
