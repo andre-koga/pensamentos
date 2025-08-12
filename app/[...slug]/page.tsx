@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 
 interface PoemPageProps {
   params: Promise<{ slug: string[] }>;
@@ -86,13 +87,14 @@ function getContentByPath(slugPath: string[]): ContentFile | undefined {
   });
 }
 
-// Format date in "Jan 15, 2024" format
+// Format date in "Jan 15, 2024" format, forcing UTC to avoid timezone shifts for date-only strings
 function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', {
+  return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  });
+    timeZone: 'UTC',
+  }).format(date);
 }
 
 export async function generateStaticParams() {
@@ -137,20 +139,24 @@ export default async function PoemPage({ params }: PoemPageProps) {
     notFound();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { content: mdxContent, created, modified } = content;
 
   return (
-    <article className="prose prose-neutral dark:prose-invert mx-auto w-full max-w-[55ch] sm:w-[55ch]">
+    <article className="prose prose-neutral dark:prose-invert mx-auto mb-20 w-full max-w-[55ch] sm:w-[55ch]">
       {/* Poem dates */}
       <div className="text-muted-foreground mb-4 text-sm">
-        Created: {formatDate(created)}
-        {created.getTime() !== modified.getTime() && (
+        {formatDate(created)}
+        {/* {created.getTime() !== modified.getTime() && (
           <> • Last modified: {formatDate(modified)}</>
-        )}
+        )} */}
       </div>
 
       {/* Render MDX content */}
-      <MDXRemote source={mdxContent} />
+      <MDXRemote
+        source={mdxContent}
+        options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+      />
     </article>
   );
 }

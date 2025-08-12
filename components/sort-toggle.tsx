@@ -114,7 +114,7 @@ export function SortToggle() {
               <Check className="ml-auto" />
             )}
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleSortChange('modified-desc')}>
             <Clock />
             Modified (New to Old)
@@ -126,7 +126,7 @@ export function SortToggle() {
             <Clock />
             Modified (Old to New)
             {sortPreference === 'modified-asc' && <Check className="ml-auto" />}
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => handleSortChange('created-desc')}>
             <Clock />
