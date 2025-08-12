@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
 import { Clock, MapPin, Thermometer, Droplets, Wind } from 'lucide-react';
 
 interface WeatherData {
@@ -19,6 +18,7 @@ interface WeatherData {
     speed: number;
   };
   name: string;
+  timezone: number; // seconds offset from UTC for the requested location
 }
 
 interface WeatherTimeProps {
@@ -36,29 +36,18 @@ export default function WeatherTime({
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
 
-  // Handle hydration
+  // Set time on mount and update every second (avoid computing time during render)
   useEffect(() => {
-    setMounted(true);
     setCurrentTime(new Date());
-  }, []);
-
-  // Update time every second
-  useEffect(() => {
-    if (!mounted) return;
-
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [mounted]);
+  }, []);
 
   // Fetch weather data
   useEffect(() => {
-    if (!mounted) return;
-
     const fetchWeather = async () => {
       if (!apiKey) {
         setError('OpenWeather API key not configured');
@@ -67,8 +56,10 @@ export default function WeatherTime({
       }
 
       try {
+        setLoading(true);
+        const cityParam = encodeURIComponent(`${city},${countryCode}`);
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid=${apiKey}`
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityParam}&units=metric&appid=${apiKey}`
         );
 
         if (!response.ok) {
@@ -87,20 +78,28 @@ export default function WeatherTime({
     };
 
     fetchWeather();
-  }, [city, countryCode, apiKey, mounted]);
+  }, [city, countryCode, apiKey]);
 
-  // Don't render anything until mounted to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <div className="border-border bg-card flex flex-col items-center gap-4 rounded-lg border p-6">
-        <div className="flex items-center gap-2 font-mono text-lg">
-          <Clock />
-          <span>--:--:--</span>
-        </div>
-        <div className="text-muted-foreground text-sm">Loading...</div>
-      </div>
-    );
-  }
+  const formatCityTime = (date: Date, timezoneOffsetSeconds: number) => {
+    const shifted = new Date(date.getTime() + timezoneOffsetSeconds * 1000);
+    return new Intl.DateTimeFormat(undefined, {
+      timeZone: 'UTC',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(shifted);
+  };
+
+  const formatCityDate = (date: Date, timezoneOffsetSeconds: number) => {
+    const shifted = new Date(date.getTime() + timezoneOffsetSeconds * 1000);
+    return new Intl.DateTimeFormat(undefined, {
+      timeZone: 'UTC',
+      weekday: 'long',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(shifted);
+  };
 
   if (error) {
     return (
@@ -115,26 +114,28 @@ export default function WeatherTime({
 
   return (
     <div className="border-border bg-card flex flex-col items-center gap-4 rounded-lg border p-6">
-      {/* Current Time */}
-      <div className="flex items-center gap-2 font-mono text-lg">
-        <Clock />
+      {/* Location */}
+      <div className="flex items-center gap-1 text-sm">
+        <MapPin size={16} />
         <span>
-          {currentTime ? format(currentTime, 'HH:mm:ss') : '--:--:--'}
+          {city}, {countryCode}
         </span>
       </div>
 
       {/* Date */}
       <div className="text-muted-foreground text-sm">
-        {currentTime
-          ? format(currentTime, 'EEEE, MMMM do, yyyy')
+        {currentTime && weather
+          ? formatCityDate(currentTime, weather.timezone)
           : 'Loading...'}
       </div>
 
-      {/* Location */}
-      <div className="flex items-center gap-2 text-sm">
-        <MapPin />
+      {/* Current Time */}
+      <div className="flex items-center gap-1">
+        <Clock size={16} />
         <span>
-          {city}, {countryCode}
+          {currentTime && weather
+            ? formatCityTime(currentTime, weather.timezone)
+            : '--:--:--'}
         </span>
       </div>
 
@@ -147,9 +148,14 @@ export default function WeatherTime({
       ) : weather ? (
         <div className="flex flex-col items-center gap-2">
           {/* Temperature */}
-          <div className="flex items-center gap-2 text-2xl font-bold">
+          <div className="flex items-center text-2xl font-bold">
             <Thermometer />
             <span>{Math.round(weather.main.temp)}°C</span>
+            <span className="text-muted-foreground ml-1">
+              <span className="text-xs">
+                / {Math.round((weather.main.temp * 9) / 5 + 32)}°F
+              </span>
+            </span>
           </div>
 
           {/* Weather Description */}
@@ -160,11 +166,11 @@ export default function WeatherTime({
           {/* Additional Weather Info */}
           <div className="text-muted-foreground flex gap-4 text-xs">
             <div className="flex items-center gap-1">
-              <Droplets />
+              <Droplets size={16} />
               <span>{weather.main.humidity}%</span>
             </div>
             <div className="flex items-center gap-1">
-              <Wind />
+              <Wind size={16} />
               <span>{Math.round(weather.wind.speed)} m/s</span>
             </div>
           </div>
