@@ -249,6 +249,17 @@ export function getRecentlyModified(sortOption?: SortOption): ContentItem[] {
     .slice(0, 3);
 }
 
+// Function to get recently created poems (last 3)
+export function getRecentlyCreated(sortOption?: SortOption): ContentItem[] {
+  const allItems = getAllContentItems(sortOption);
+
+  // For recent items, we still want to show the most recently created
+  // regardless of the sort option, but we'll respect the sort option for the main list
+  return allItems
+    .sort((a, b) => b.created.getTime() - a.created.getTime())
+    .slice(0, 3);
+}
+
 // Utility function to get all poem paths
 export function getAllPoemPaths(): string[] {
   const contentDir = join(process.cwd(), 'content');

@@ -50,12 +50,12 @@ interface TreeProps {
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   contentTree: ContentTreeItem[];
-  recentlyModified: ContentItem[];
+  recentlyCreated: ContentItem[];
 }
 
 export function AppSidebar({
   contentTree,
-  recentlyModified,
+  recentlyCreated,
   ...props
 }: AppSidebarProps) {
   const router = useRouter();
@@ -143,10 +143,10 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup className="pt-0">
-          <SidebarGroupLabel>Recent</SidebarGroupLabel>
+          <SidebarGroupLabel>Recently Created</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {recentlyModified.map((item, index) => (
+              {recentlyCreated.map((item, index) => (
                 <SidebarMenuItem key={index}>
                   <SidebarMenuButton asChild className="h-10">
                     <Link href={`/${item.path.join('/')}`}>
@@ -155,7 +155,7 @@ export function AppSidebar({
                           {item.path[item.path.length - 1]}
                         </span>
                         <span className="truncate text-xs opacity-60">
-                          {formatTimeAgo(item.modified)}
+                          {formatTimeAgo(item.created)}
                         </span>
                       </div>
                     </Link>

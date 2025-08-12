@@ -12,7 +12,7 @@ import {
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppBreadcrumbs } from '@/components/app-breadcrumbs';
 import { Separator } from '@/components/ui/separator';
-import { getContentTree, getRecentlyModified } from '@/lib/content-utils';
+import { getContentTree, getRecentlyCreated } from '@/lib/content-utils';
 import { getSortPreferenceFromCookies } from '@/lib/cookie-utils';
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   const sortPreference = await getSortPreferenceFromCookies();
   const contentTree = getContentTree(sortPreference);
-  const recentlyModified = getRecentlyModified(sortPreference);
+  const recentlyCreated = getRecentlyCreated(sortPreference);
 
   return (
     <html
@@ -46,7 +46,7 @@ export default async function RootLayout({
           <SidebarProvider>
             <AppSidebar
               contentTree={contentTree}
-              recentlyModified={recentlyModified}
+              recentlyCreated={recentlyCreated}
             />
             <SidebarInset>
               <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
